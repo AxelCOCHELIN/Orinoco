@@ -9909,5 +9909,9 @@ h3 {
     border-color: #dee2e6;
   }
 }
+#navbarContent {
+  display: flex;
+  justify-content: flex-end;
+}
 
 /*# sourceMappingURL=style.css.map */

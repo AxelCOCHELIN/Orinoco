@@ -1,5 +1,4 @@
-let carts = document.querySelectorAll(".add-to-cart");
-
+//création de l'objet générique ours en peluche
 class Bear {
   constructor(colors, _id, name, price, imageUrl, description, inCart) {
     this.colors = colors;
@@ -11,7 +10,7 @@ class Bear {
     this.inCart = inCart;
   }
 }
-
+//création des objets définis ours en peluche
 let norbert = new Bear(
   ["Tan", "Chocolate", "Black", "White"],
   "5be9c8541c9d440000665243",
@@ -58,8 +57,11 @@ let garfunkel = new Bear(
   0
 );
 
+//variables générales
+let carts = document.querySelectorAll(".add-to-cart");
 let products = [norbert, arnold, lennyAndCarl, gustav, garfunkel];
 
+//écouteur de click sur les bouton ajouter au panier
 for (let i = 0; i < carts.length; i++) {
   carts[i].addEventListener("click", () => {
     cartsNumbers(products[i]);
@@ -67,6 +69,7 @@ for (let i = 0; i < carts.length; i++) {
   });
 }
 
+//ajout d'un compteur de produits dans le navigateur du site restant après chargement
 function onLoadCartNumbers() {
   let productNumbers = localStorage.getItem("cartsNumbers");
   if (productNumbers) {
@@ -74,6 +77,7 @@ function onLoadCartNumbers() {
   }
 }
 
+//sauvegarde local des produits ajoutés au panier
 function cartsNumbers(product) {
   let productNumbers = localStorage.getItem("cartsNumbers");
   productNumbers = parseInt(productNumbers);
@@ -87,6 +91,7 @@ function cartsNumbers(product) {
   setItems(product);
 }
 
+//fonction d'ajout des produits au panier
 function setItems(product) {
   let cartItems = localStorage.getItem("productsInCart");
   cartItems = JSON.parse(cartItems);
@@ -107,8 +112,8 @@ function setItems(product) {
   localStorage.setItem("productsInCart", JSON.stringify(cartItems));
 }
 
+//fonction du calcul du prix total du panier
 function totalCost(product) {
-  //console.log("teh price is", product.price / 100);
   let cartCost = localStorage.getItem("totalCost");
 
   if (cartCost != null) {
@@ -118,5 +123,46 @@ function totalCost(product) {
     localStorage.setItem("totalCost", product.price / 100);
   }
 }
+//**********Panier***********//
 
+function displayCart() {
+  let cartItems = localStorage.getItem("productsInCart");
+  cartItems = JSON.parse(cartItems);
+  let productContainer = document.querySelector(".product-container");
+  let cartCost = localStorage.getItem("totalCost");
+  if (cartItems && productContainer) {
+    productContainer.innerHTML = "";
+    Object.values(cartItems).map((item) => {
+      productContainer.innerHTML += `    
+    <div class="product-image col-4 text-center my-3">
+      <i class="fas fa-times-circle"></i>
+      <img src="./images/${item.name}.jpg" class="col-6">
+    </div>
+    <div class="product-name col-2 text-center align-self-center my-3">${
+      item.name
+    }</div>
+    <div class="product-price col-2 text-center align-self-center my-3">${
+      item.price / 100
+    },00 €</div>
+    <div class="quantity col-2 text-center align-self-center my-3"><i class="fas fa-arrow-circle-up"></i><span>   </span>${
+      item.inCart
+    }<span>   </span><i class="fas fa-arrow-circle-down"></i></div>
+    <div class="total col-2 text-center align-self-center my-3">${
+      item.inCart * (item.price / 100)
+    },00 €</div> 
+  `;
+    });
+    productContainer.innerHTML += `
+    <div class="col-2 offset-8 text-center align-self-center my-3">
+      <h5>TOTAL :</h5>
+    </div>
+    <div class="col-2 text-center align-self-center my-3">
+      <h5>${cartCost},00 €</h5>
+    </div>
+    `;
+  }
+}
+
+//Chargement des fonctions
 onLoadCartNumbers();
+displayCart();

@@ -1,168 +1,185 @@
-//création de l'objet générique ours en peluche
-class Bear {
-  constructor(colors, _id, name, price, imageUrl, description, inCart) {
-    this.colors = colors;
-    this._id = _id;
-    this.name = name;
-    this.price = price;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.inCart = inCart;
-  }
-}
-//création des objets définis ours en peluche
-let norbert = new Bear(
-  ["Tan", "Chocolate", "Black", "White"],
-  "5be9c8541c9d440000665243",
-  "Norbert",
-  2900,
-  "http://localhost:3000/images/teddy_1.jpg",
-  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  0
-);
-let arnold = new Bear(
-  ["Pale brown", "Dark brown", "White"],
-  "5beaa8bf1c9d440000a57d94",
-  "Arnold",
-  3900,
-  "http://localhost:3000/images/teddy_2.jpg",
-  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  0
-);
-let lennyAndCarl = new Bear(
-  ["Brown"],
-  "5beaaa8f1c9d440000a57d95",
-  "Lenny and Carl",
-  5900,
-  "http://localhost:3000/images/teddy_3.jpg",
-  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  0
-);
-let gustav = new Bear(
-  ["Brown", "Blue", "Pink"],
-  "5beaabe91c9d440000a57d96",
-  "Gustav",
-  4500,
-  "http://localhost:3000/images/teddy_4.jpg",
-  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  0
-);
-let garfunkel = new Bear(
-  ["Beige", "Tan", "Chocolate"],
-  "5beaacd41c9d440000a57d97",
-  "Garfunkel",
-  5500,
-  "http://localhost:3000/images/teddy_5.jpg",
-  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  0
-);
-
-//variables générales
-let carts = document.querySelectorAll(".add-to-cart");
-let products = [norbert, arnold, lennyAndCarl, gustav, garfunkel];
-
-//écouteur de click sur les bouton ajouter au panier
-for (let i = 0; i < carts.length; i++) {
-  carts[i].addEventListener("click", () => {
-    cartsNumbers(products[i]);
-    totalCost(products[i]);
-  });
-}
-
-//ajout d'un compteur de produits dans le navigateur du site restant après chargement
-function onLoadCartNumbers() {
-  let productNumbers = localStorage.getItem("cartsNumbers");
-  if (productNumbers) {
-    document.querySelector(".cart span").textContent = productNumbers;
-  }
-}
-
-//sauvegarde local des produits ajoutés au panier
-function cartsNumbers(product) {
-  let productNumbers = localStorage.getItem("cartsNumbers");
-  productNumbers = parseInt(productNumbers);
-  if (productNumbers) {
-    localStorage.setItem("cartsNumbers", productNumbers + 1);
-    document.querySelector(".cart span").textContent = productNumbers + 1;
-  } else {
-    localStorage.setItem("cartsNumbers", 1);
-    document.querySelector(".cart span").textContent = 1;
-  }
-  setItems(product);
-}
-
-//fonction d'ajout des produits au panier
-function setItems(product) {
-  let cartItems = localStorage.getItem("productsInCart");
-  cartItems = JSON.parse(cartItems);
-  if (cartItems != null) {
-    if (cartItems[product.name] == undefined) {
-      cartItems = {
-        ...cartItems,
-        [product.name]: product,
-      };
-    }
-    cartItems[product.name].inCart += 1;
-  } else {
-    product.inCart = 1;
-    cartItems = {
-      [product.name]: product,
+//création de la fonction faisant la requête auprès de l'API
+let get = function (url) {
+  return new Promise(function (resolve, reject) {
+    let request = new window.XMLHttpRequest();
+    request.onreadystatechange = function () {
+      if (request.readyState === 4) {
+        if (request.status === 200) {
+          resolve(request.responseText);
+        } else {
+          reject(request);
+        }
+      }
     };
-  }
-  localStorage.setItem("productsInCart", JSON.stringify(cartItems));
-}
+    request.open("GET", url, true);
+    request.send();
+  });
+};
 
-//fonction du calcul du prix total du panier
-function totalCost(product) {
-  let cartCost = localStorage.getItem("totalCost");
+/**********CREATION DE LA PAGE LISTE EN JS *********/
+//appelle de la fonction
+get("http://localhost:3000/api/teddies/")
+  .then(function (response) {
+    let teddies = JSON.parse(response); //tranformation des données JSON en JS
+    //création de la boucle pour passer en revue chaque objet
+    for (let i = 0; i < teddies.length; i++) {
+      let productList = document.querySelector(".product-list"); //récupération de la div qui va réceptionné les données
+      //création des cartes listant les produits
+      productList.innerHTML = `
+        <div class="col-12 col-lg-4 teddy-0">
+          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
+            <img
+            class="card-img-top"
+            src=${teddies[0].imageUrl}
+            alt="photo peluche ours"
+            />
+            <div class="card-body">
+              <h5 class="card-title">${teddies[0].name}</h5>
+              <p class="card-text text-right">${teddies[0].price / 100},00 €</p>
+              <p class="card-text d-none">${teddies[0].colors}<p>
+              <p class="card-text d-none">${teddies[0].description}<p>
+              <p class="card-text d-none">${teddies[0]._id}<p>
+            </div>
+            <div class="card-footer text-center">
+              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 teddy-1">
+          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
+            <img
+            class="card-img-top"
+            src=${teddies[1].imageUrl}
+            alt="photo peluche ours"
+            />
+            <div class="card-body">
+              <h5 class="card-title">${teddies[1].name}</h5>
+              <p class="card-text text-right">${teddies[1].price / 100},00 €</p>
+              <p class="card-text d-none">${teddies[1].colors}<p>
+              <p class="card-text d-none">${teddies[1].description}<p>
+              <p class="card-text d-none">${teddies[1]._id}<p>
+            </div>
+            <div class="card-footer text-center">
+              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 teddy-2">
+          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
+            <img
+            class="card-img-top"
+            src=${teddies[2].imageUrl}
+            alt="photo peluche ours"
+            />
+            <div class="card-body">
+              <h5 class="card-title">${teddies[2].name}</h5>
+              <p class="card-text text-right">${teddies[2].price / 100},00 €</p>
+              <p class="card-text d-none">${teddies[2].colors}<p>
+              <p class="card-text d-none">${teddies[2].description}<p>
+              <p class="card-text d-none">${teddies[2]._id}<p>
+            </div>
+            <div class="card-footer text-center">
+              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 teddy-3">
+          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
+            <img
+            class="card-img-top"
+            src=${teddies[3].imageUrl}
+            alt="photo peluche ours"
+            />
+            <div class="card-body">
+              <h5 class="card-title">${teddies[3].name}</h5>
+              <p class="card-text text-right">${teddies[3].price / 100},00 €</p>
+              <p class="card-text d-none">${teddies[3].colors}<p>
+              <p class="card-text d-none">${teddies[3].description}<p>
+              <p class="card-text d-none">${teddies[3]._id}<p>
+            </div>
+            <div class="card-footer text-center">
+              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 teddy-4">
+          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
+            <img
+            class="card-img-top"
+            src=${teddies[4].imageUrl}
+            alt="photo peluche ours"
+            />
+            <div class="card-body">
+              <h5 class="card-title">${teddies[4].name}</h5>
+              <p class="card-text text-right">${teddies[4].price / 100},00 €</p>
+              <p class="card-text d-none">${teddies[4].colors}<p>
+              <p class="card-text d-none">${teddies[4].description}<p>
+              <p class="card-text d-none">${teddies[4]._id}<p>
+            </div>
+            <div class="card-footer text-center">
+              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    let descriptionLinks = document.querySelectorAll(".description-link"); //Création un sélecteur js des lien de description
+    for (let i = 0; i < descriptionLinks.length; i++) {
+      let link = descriptionLinks[i]; //création variable de chaque produit
+      link.addEventListener("click", function (event) {
+        localStorage.setItem("image", teddies[i].imageUrl); //enregistrement local de l'image de l'ours selectionné
+        localStorage.setItem("name", teddies[i].name); //enregistrement local du nom de l'ours selectionné
+        localStorage.setItem("price", teddies[i].price); //enregistrement local du prix de l'ours selectionné
+        localStorage.setItem("colors", teddies[i].colors); //enregistrement local des couleurs de l'ours selectionné
+        localStorage.setItem("description", teddies[i].description); //enregistrement local de la description de l'ours selectionné
+        localStorage.setItem("_id", teddies[i]._id); //enregistrement local de l'id de l'ours selectionné
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
-  if (cartCost != null) {
-    cartCost = parseInt(cartCost);
-    localStorage.setItem("totalCost", cartCost + product.price / 100);
-  } else {
-    localStorage.setItem("totalCost", product.price / 100);
-  }
-}
-//**********Panier***********//
+/**********CREATION DE LA PAGE PRODUIT EN JS *********/
+let displayProduct = document.querySelector(".display-product"); // création selecteur du conteneur de la page product en js
+let productPrice = localStorage.getItem("price"); //enregistre le prix dans une variable
+productPrice = parseInt(productPrice); //transforme le prix en un nombre plutôt qu'un string
 
-function displayCart() {
-  let cartItems = localStorage.getItem("productsInCart");
-  cartItems = JSON.parse(cartItems);
-  let productContainer = document.querySelector(".product-container");
-  let cartCost = localStorage.getItem("totalCost");
-  if (cartItems && productContainer) {
-    productContainer.innerHTML = "";
-    Object.values(cartItems).map((item) => {
-      productContainer.innerHTML += `    
-    <div class="product-image col-4 text-center my-3">
-      <i class="fas fa-times-circle"></i>
-      <img src="./images/${item.name}.jpg" class="col-6">
-    </div>
-    <div class="product-name col-2 text-center align-self-center my-3">${
-      item.name
-    }</div>
-    <div class="product-price col-2 text-center align-self-center my-3">${
-      item.price / 100
-    },00 €</div>
-    <div class="quantity col-2 text-center align-self-center my-3"><i class="fas fa-arrow-circle-up"></i><span>   </span>${
-      item.inCart
-    }<span>   </span><i class="fas fa-arrow-circle-down"></i></div>
-    <div class="total col-2 text-center align-self-center my-3">${
-      item.inCart * (item.price / 100)
-    },00 €</div> 
-  `;
-    });
-    productContainer.innerHTML += `
-    <div class="col-2 offset-8 text-center align-self-center my-3">
-      <h5>TOTAL :</h5>
-    </div>
-    <div class="col-2 text-center align-self-center my-3">
-      <h5>${cartCost},00 €</h5>
-    </div>
-    `;
-  }
-}
-
-//Chargement des fonctions
-onLoadCartNumbers();
-displayCart();
+//création du html de la page produit
+displayProduct.innerHTML += `
+<div class='row mt-5'>
+        <div class='col-6 text-center align-self-center'><h4>Image</h4></div>
+        <div class='col-3 text-center align-self-center'><h4>Nom</h4></div>
+        <div class='col-3 text-center align-self-center'><h4>Prix</h4></div>
+      </div>
+      <div class='row my-4'>
+        <div class='col-6 text-center align-self-center'>${localStorage.getItem(
+          "image"
+        )}</div>
+        <div class='col-3 text-center align-self-center'>${localStorage.getItem(
+          "name"
+        )}</div>
+        <div class='col-3 text-center align-self-center'>${
+          productPrice / 100
+        },00 €</div>
+      </div>
+      <div class='row mt-5'>
+        <div class='col-6 text-center align-self-center'><h4>description</h4></div>
+        <div class='col-3 text-center align-self-center'><h4>Couleurs au choix</h4></div>
+        <div class='col-3 text-center align-self-center'><h4>ID Produit</h4></div>
+      </div>
+      <div class='row my-4'>
+        <div class='col-6 text-center align-self-center'>${localStorage.getItem(
+          "description"
+        )}</div>
+        <div class='col-3 text-center align-self-center'>${localStorage.getItem(
+          "colors"
+        )}</div>
+        <div class='col-3 text-center align-self-center'>${localStorage.getItem(
+          "_id"
+        )}</div>
+      </div>
+      <div class="card-footer text-center bg-white">
+        <a href="cart.html" class="btn btn-primary description-link">Ajouter au panier</a>
+      </div>
+      `;

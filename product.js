@@ -42,15 +42,19 @@ displayProduct.innerHTML += `
       </div>
       <div class='row mt-5'>
         <div class='col-6 text-center align-self-center'><h4>Description</h4></div>
-        <div class='col-4 text-center align-self-center'><h4>Couleurs au choix</h4></div>
-        <div class='col-2 text-center align-self-center'><h4>ID Produit</h4></div>
+        <div class='col-3 text-center align-self-center'><h4>Couleurs au choix</h4></div>
+        <div class='col-3 text-center align-self-center'><h4>ID Produit</h4></div>
       </div>
       <div class='row my-3'>
         <div class='col-6 text-center align-self-center'>${localStorage.getItem(
           "description"
         )}</div>
-        <div class='col-4 text-center align-self-center colors'></div>
-        <div class='col-2 text-center align-self-center'>${localStorage.getItem(
+        <div class='col-3 text-center align-self-center colors'>
+            <div class="input-group mb-3 text-center w-100">
+                <select class="select text-center w-100" id="inputGroupSelect"></select>
+            </div>
+        </div>
+        <div class='col-3 text-center align-self-center'>${localStorage.getItem(
           "_id"
         )}</div>
       </div>
@@ -60,9 +64,9 @@ displayProduct.innerHTML += `
       `;
 
 for (let element of color) {
-  let newButton = document.createElement("button");
-  newButton.className = "btn btn-light text-center";
-  newButton.textContent = element;
-  let newColorButton = document.querySelector(".colors");
-  newColorButton.appendChild(newButton);
+  let newOption = document.createElement("option");
+  newOption.setAttribute("value", element);
+  newOption.textContent = element;
+  let newColorChoice = document.querySelector(".select");
+  newColorChoice.appendChild(newOption);
 }

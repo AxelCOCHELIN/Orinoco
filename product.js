@@ -66,43 +66,53 @@ for (let element of color) {
   newColorChoice.appendChild(newOption);
 }
 
-//création de l'ajout au panier
+//donne le focus au choix de couleurs
+function loadFocus() {
+  document.querySelector(".select").focus();
+}
+window.onload = loadFocus;
+
+//création variables de l'ajout au panier
 let cartButton = document.querySelector(".cart-button");
 let chosenColor = document.querySelector("select");
 
-cartButton.addEventListener("click", function () {
-  addToCart();
-  inCartNumber();
+//création d'un objet modèle
+class Bear {
+  constructor(image, name, description, price, color, iD) {
+    (this.image = image),
+      (this.name = name),
+      (this.description = description),
+      (this.price = price),
+      (this.color = color),
+      (this.iD = iD);
+  }
+}
+
+//créer un tableau d'objets dans le panier
+let productsInCart = localStorage.getItem("productsToBuy");
+if (productsInCart == null) {
+  productsInCart = new Array();
+} else {
+  productsInCart = JSON.parse(productsInCart);
+}
+
+//met le focus sur les couleurs
+chosenColor.addEventListener("focusout", function () {
+  localStorage.setItem("color", chosenColor.value);
 });
 
-//fonction créant un objet contenant toutes les information du produit ajouté au panier
+//fonction ajoutant un objet contenant toutes les informations du produit au panier
 function addToCart() {
-  console.log("added to cart");
-
-  class inCartProduct {
-    constructor(image, name, description, price, color, iD, inCart) {
-      (this.image = image),
-        (this.name = name),
-        (this.description = description),
-        (this.price = price),
-        (this.color = color),
-        (this.iD = iD),
-        (this.inCart = inCart);
-    }
-  }
-  localStorage.setItem("color", chosenColor.value);
-
-  let newInCartProduct = new inCartProduct(
+  let newInCartProduct = new Bear(
     localStorage.getItem("image"),
     localStorage.getItem("name"),
     localStorage.getItem("description"),
     localStorage.getItem("price"),
     localStorage.getItem("color"),
-    localStorage.getItem("_id"),
-    0
+    localStorage.getItem("_id")
   );
-  newInCartProduct = JSON.stringify(newInCartProduct);
-  localStorage.setItem("cartProduct", newInCartProduct);
+  productsInCart.push(newInCartProduct);
+  localStorage.setItem("productsToBuy", JSON.stringify(productsInCart));
 }
 
 //fonction ajoutant +1 au nombre d'objet dans l'icone panier
@@ -126,14 +136,19 @@ function onLoadCartNumber() {
   }
 }
 
+//fonction ajoutant un nouveau produit au panier
+
+//evenements au click sur ajouter au panier
+cartButton.addEventListener("click", function () {
+  addToCart();
+  inCartNumber();
+});
+
 //appelle de la fonction
 onLoadCartNumber();
 
 /**
- * LORSQUE je clique sur le bouton ajout au panier
- * je sauvegarde dans le localStorage un objet contenant
- *      l'image, le nom, la description, le prix, la couleur choisi et l'_id du produit
- * j'ajoute 1 au nombre d'élément dans le panier
+ *
  * j'affiche dans la page cart.html les objets ajoutés
  *
  */

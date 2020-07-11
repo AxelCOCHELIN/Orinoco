@@ -1,21 +1,9 @@
-//variables générales
-let carts = document.querySelectorAll(".add-to-cart");
-let products = [norbert, arnold, lennyAndCarl, gustav, garfunkel];
-
 //écouteur de click sur les bouton ajouter au panier
 for (let i = 0; i < carts.length; i++) {
   carts[i].addEventListener("click", () => {
     cartsNumbers(products[i]);
     totalCost(products[i]);
   });
-}
-
-//ajout d'un compteur de produits dans le navigateur du site restant après chargement
-function onLoadCartNumbers() {
-  let productNumbers = localStorage.getItem("cartsNumbers");
-  if (productNumbers) {
-    document.querySelector(".cart span").textContent = productNumbers;
-  }
 }
 
 //sauvegarde local des produits ajoutés au panier
@@ -103,7 +91,3 @@ function displayCart() {
       `;
   }
 }
-
-//Chargement des fonctions
-onLoadCartNumbers();
-displayCart();

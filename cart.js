@@ -19,6 +19,8 @@ if (productsInCart == null) {
   productsContainer.innerHTML = `
   <h4 class="font-italic col-12 text-center">Votre panier est vide</h4> 
   `;
+  let formContainer = document.querySelector(".form-container");
+  formContainer.classList.add("d-none");
 } else {
   headlines.innerHTML = `
     <div class="col-md-4 d-none d-md-block text-center font-weight-bold">Image</div>
@@ -64,10 +66,13 @@ if (productsInCart == null) {
       <div class="col-md-4 offset-md-4 text-center align-self-center my-3">
         <h5>TOTAL : ${totalCost},00 €</h5>
       </div>
-        
-      </div>
   `;
 }
+
+/**
+ * Créer un formulaire pour passer commande
+ * bouton submit
+ */
 
 /**
  * CREER un js post de la commande

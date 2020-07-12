@@ -136,12 +136,27 @@ function onLoadCartNumber() {
   }
 }
 
-//fonction ajoutant un nouveau produit au panier
+//fonction calculant le prix total
+function totalCost() {
+  let totalPrice = localStorage.getItem("totalCost");
+  if (totalPrice == undefined) {
+    let productPrice = localStorage.getItem("price");
+    localStorage.setItem("totalCost", productPrice / 100);
+  } else {
+    let productPrice = localStorage.getItem("price");
+    totalPrice = parseInt(totalPrice);
+    totalPrice = localStorage.setItem(
+      "totalCost",
+      totalPrice + productPrice / 100
+    );
+  }
+}
 
 //evenements au click sur ajouter au panier
 cartButton.addEventListener("click", function () {
   addToCart();
   inCartNumber();
+  totalCost();
 });
 
 //appelle de la fonction

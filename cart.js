@@ -97,7 +97,8 @@ let city = document.querySelector("#inputCity");
 let zip = document.querySelector("#inputZip");
 
 //au click sur submit
-orderButton.addEventListener("click", function () {
+orderButton.addEventListener("submit", function (event) {
+  event.preventDefault();
   //création du nouveau client
   let newClient = new Client(
     firstName.value,
@@ -112,8 +113,22 @@ orderButton.addEventListener("click", function () {
   let orderingClient = localStorage.getItem("contact");
   let orderTable = localStorage.getItem("productsToBuy");
   let orderInfos = orderingClient + orderTable;
-  console.log(orderInfos);
-  //création de la fonction de post
+
+  //le post ne fonctionne pas...
+  //création de la fonction de post en fetch
+  fetch("http://localhost:3000/api/teddies/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: orderInfos,
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+    });
 });
 
 /**

@@ -20,107 +20,36 @@ let get = function (url) {
 //appelle de la fonction
 get("http://localhost:3000/api/teddies/")
   .then(function (response) {
+    let productList = document.querySelector(".product-list");
     let teddies = JSON.parse(response); //tranformation des données JSON en JS
     //création de la boucle pour passer en revue chaque objet
+    console.log(teddies);
     for (let i = 0; i < teddies.length; i++) {
-      let productList = document.querySelector(".product-list"); //récupération de la div qui va réceptionné les données
+      //récupération de la div qui va réceptionné les données
+      let teddiesList = document.createElement("div");
+      teddiesList.classList.add("row", "teddies");
+      productList.appendChild(teddiesList);
+      let teddyDisplay = document.querySelector(".teddies");
+
       //création des cartes listant les produits
-      productList.innerHTML = `
-        <div class="col-12 col-lg-4 teddy-0">
-          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
+      teddyDisplay.innerHTML += `      
+          <div class="card mb-2 m-md-3 mb-lg-0 border-dark shadow-lg col-10 offset-1 col-md-4 col-lg-3">
             <img
             class="card-img-top"
-            src=${teddies[0].imageUrl}
+            src=${teddies[i].imageUrl}
             alt="photo peluche ours"
             />
             <div class="card-body">
-              <h5 class="card-title">${teddies[0].name}</h5>
-              <p class="card-text text-right">${teddies[0].price / 100},00 €</p>
-              <p class="card-text d-none">${teddies[0].colors}<p>
-              <p class="card-text d-none">${teddies[0].description}<p>
-              <p class="card-text d-none">${teddies[0]._id}<p>
+              <h5 class="card-title">${teddies[i].name}</h5>
+              <p class="card-text text-right">${teddies[i].price / 100},00 €</p>
+              <p class="card-text d-none">${teddies[i].colors}<p>
+              <p class="card-text d-none">${teddies[i].description}<p>
+              <p class="card-text d-none">${teddies[i]._id}<p>
             </div>
             <div class="card-footer text-center">
               <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
             </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-4 teddy-1">
-          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
-            <img
-            class="card-img-top"
-            src=${teddies[1].imageUrl}
-            alt="photo peluche ours"
-            />
-            <div class="card-body">
-              <h5 class="card-title">${teddies[1].name}</h5>
-              <p class="card-text text-right">${teddies[1].price / 100},00 €</p>
-              <p class="card-text d-none">${teddies[1].colors}<p>
-              <p class="card-text d-none">${teddies[1].description}<p>
-              <p class="card-text d-none">${teddies[1]._id}<p>
-            </div>
-            <div class="card-footer text-center">
-              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-4 teddy-2">
-          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
-            <img
-            class="card-img-top"
-            src=${teddies[2].imageUrl}
-            alt="photo peluche ours"
-            />
-            <div class="card-body">
-              <h5 class="card-title">${teddies[2].name}</h5>
-              <p class="card-text text-right">${teddies[2].price / 100},00 €</p>
-              <p class="card-text d-none">${teddies[2].colors}<p>
-              <p class="card-text d-none">${teddies[2].description}<p>
-              <p class="card-text d-none">${teddies[2]._id}<p>
-            </div>
-            <div class="card-footer text-center">
-              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-4 teddy-3">
-          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
-            <img
-            class="card-img-top"
-            src=${teddies[3].imageUrl}
-            alt="photo peluche ours"
-            />
-            <div class="card-body">
-              <h5 class="card-title">${teddies[3].name}</h5>
-              <p class="card-text text-right">${teddies[3].price / 100},00 €</p>
-              <p class="card-text d-none">${teddies[3].colors}<p>
-              <p class="card-text d-none">${teddies[3].description}<p>
-              <p class="card-text d-none">${teddies[3]._id}<p>
-            </div>
-            <div class="card-footer text-center">
-              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-4 teddy-4">
-          <div class="card my-4 mb-lg-0 border-dark shadow-lg">
-            <img
-            class="card-img-top"
-            src=${teddies[4].imageUrl}
-            alt="photo peluche ours"
-            />
-            <div class="card-body">
-              <h5 class="card-title">${teddies[4].name}</h5>
-              <p class="card-text text-right">${teddies[4].price / 100},00 €</p>
-              <p class="card-text d-none">${teddies[4].colors}<p>
-              <p class="card-text d-none">${teddies[4].description}<p>
-              <p class="card-text d-none">${teddies[4]._id}<p>
-            </div>
-            <div class="card-footer text-center">
-              <a href="product.html" class="btn btn-primary description-link stretched-link">Description</a>
-            </div>
-          </div>
-        </div>
+          </div>  
       `;
     }
     let descriptionLinks = document.querySelectorAll(".description-link"); //Création un sélecteur js des lien de description

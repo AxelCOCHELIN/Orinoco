@@ -22,6 +22,7 @@ if (productsInCart == null) {
   let formContainer = document.querySelector(".form-container");
   formContainer.classList.add("d-none");
 } else {
+  //affichage de l'en-tête
   headlines.innerHTML = `
     <div class="col-md-4 d-none d-md-block text-center font-weight-bold">Image</div>
     <div class="col-md-2 d-none d-md-block text-center font-weight-bold">
@@ -32,30 +33,33 @@ if (productsInCart == null) {
           Couleur et description
     </div>
   `;
-  productsInCart.forEach((product) => {
-    let productsDisplay = document.createElement("div");
-    productsDisplay.classList.add("product-added");
-    productsContainer.appendChild(productsDisplay);
-    let productDisplay = document.querySelector(".product-added");
+  //affichage de chaque produit
+  for (let i = 0; i < productsInCart.length; i++) {
+    let productsDisplay = document.createElement("div"); //création d'une div
+    productsDisplay.classList.add("product-added"); //ajout de la class product-added
+    productsContainer.appendChild(productsDisplay); //ajout de la div créée dans la div container
+    let productDisplay = document.querySelector(".product-added"); //ciblage de la div créée
+    //nouveau HTML par produit
     productDisplay.innerHTML += `
     <div class="card mb-3">
-    <div class="row no-gutters">
-      <div class="col-md-4 text-center align-self-center">
-        <img src="${product.image}" class="card-img" alt="">
+      <div class="row no-gutters">
+        <div class="col-md-4 text-center align-self-center">
+          <img src="${productsInCart[i].image}" class="card-img" alt="">
+        </div>
+        <div class="col-md-2 text-center align-self-center"><h5>${
+          productsInCart[i].name
+        }</h5></div>
+        <div class="col-md-2 text-center align-self-center"><h5>${
+          productsInCart[i].price / 100
+        },00 €</h5></div>
+        <div class="col-md-4 text-center align-self-center"><h5>${
+          productsInCart[i].color
+        }</h5><p>${productsInCart[i].description}</p></div>
       </div>
-      <div class="col-md-2 text-center align-self-center"><h5>${
-        product.name
-      }</h5></div>
-      <div class="col-md-2 text-center align-self-center"><h5>${
-        product.price / 100
-      },00 €</h5></div>
-      <div class="col-md-4 text-center align-self-center"><h5>${
-        product.color
-      }</h5><p>${product.description}</p></div>
-    </div>
     </div>
   `;
-  });
+  }
+  //affichage du prix total
   let totalCost = localStorage.getItem("totalCost");
   totalCost = parseInt(totalCost);
   let productsTotalCost = document.createElement("div");
@@ -69,13 +73,51 @@ if (productsInCart == null) {
   `;
 }
 
-/**
- * Créer un formulaire pour passer commande
- * bouton submit
- */
+// création de l'objet général client
+class Client {
+  constructor(firstName, lastName, eMail, telephoneNumber, address, city, zip) {
+    (this.firstName = firstName),
+      (this.lastName = lastName),
+      (this.eMail = eMail),
+      (this.telephoneNumber = telephoneNumber),
+      (this.address = address),
+      (this.city = city),
+      (this.zip = zip);
+  }
+}
+
+//variables générales du client
+let orderButton = document.querySelector(".order-submit");
+let firstName = document.querySelector("#firstName");
+let lastName = document.querySelector("#lastName");
+let eMail = document.querySelector("#inputEmail");
+let telephoneNumber = document.querySelector("#telephoneNumber");
+let address = document.querySelector("#inputAddress");
+let city = document.querySelector("#inputCity");
+let zip = document.querySelector("#inputZip");
+
+//au click sur submit
+orderButton.addEventListener("click", function () {
+  //création du nouveau client
+  let newClient = new Client(
+    firstName.value,
+    lastName.value,
+    eMail.value,
+    telephoneNumber.value,
+    address.value,
+    city.value,
+    zip.value
+  );
+  localStorage.setItem("contact", JSON.stringify(newClient)); //stockage de l'objet client dans le localStorage
+  let orderingClient = localStorage.getItem("contact");
+  let orderTable = localStorage.getItem("productsToBuy");
+  let orderInfos = orderingClient + orderTable;
+  console.log(orderInfos);
+  //création de la fonction de post
+});
 
 /**
- * CREER un js post de la commande
+ * post
+ * récupérer l'id de commande
+ * créer html de confirm
  */
-
-//fonction affichant le nombre de produits dans le panier au chargement

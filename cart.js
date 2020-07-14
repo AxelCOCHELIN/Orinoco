@@ -88,6 +88,7 @@ class Client {
 
 //variables générales du client
 let orderButton = document.querySelector(".order-submit");
+let validationButton = document.querySelector(".btn-primary");
 let firstName = document.querySelector("#firstName");
 let lastName = document.querySelector("#lastName");
 let eMail = document.querySelector("#inputEmail");
@@ -139,6 +140,7 @@ orderButton.addEventListener("click", function (event) {
         alert(
           "Vos informations ont bien été enregistrées. Vous pouvez à présent valider votre commande"
         );
+        validationButton.classList.remove("disabled");
         return res.json();
       } else {
         alert("Vous devez renseigner les champs.");

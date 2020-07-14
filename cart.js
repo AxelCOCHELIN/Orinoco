@@ -96,8 +96,14 @@ let address = document.querySelector("#inputAddress");
 let city = document.querySelector("#inputCity");
 let zip = document.querySelector("#inputZip");
 
+//créer un tableau avec les ids des articles commandés
+let productsIdList = [];
+for (let i = 0; i < productsInCart.length; i++) {
+  productsIdList.push(productsInCart[i].iD);
+}
+
 //au click sur submit
-orderButton.addEventListener("submit", function (event) {
+orderButton.addEventListener("click", function (event) {
   event.preventDefault();
   //création du nouveau client
   let newClient = new Client(
@@ -109,30 +115,38 @@ orderButton.addEventListener("submit", function (event) {
     city.value,
     zip.value
   );
-  localStorage.setItem("contact", JSON.stringify(newClient)); //stockage de l'objet client dans le localStorage
-  let orderingClient = localStorage.getItem("contact");
-  let orderTable = localStorage.getItem("productsToBuy");
-  let orderInfos = orderingClient + orderTable;
 
-  //le post ne fonctionne pas...
-  //création de la fonction de post en fetch
+  //POST à l'API
   fetch("http://localhost:3000/api/teddies/order", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: orderInfos,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contact: {
+        firstName: newClient.firstName,
+        lastName: newClient.lastName,
+        address: newClient.address,
+        city: newClient.city,
+        email: newClient.eMail,
+      },
+      products: [productsIdList],
+    }),
   })
-    .then(function (response) {
-      return response.json();
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        alert("Vous devez renseigner les champs");
+      }
     })
-    .then(function (data) {
+    .then((data) => {
       console.log(data);
-    });
+      localStorage.setItem("orderInfos", JSON.stringify(data));
+    })
+    .catch((error) => console.log("erreur de type : ", error));
+  orderButton.removeEventListener;
 });
 
 /**
- * post
  * récupérer l'id de commande
  * créer html de confirm
  */

@@ -23,7 +23,6 @@ get("http://localhost:3000/api/teddies/")
     let productList = document.querySelector(".product-list");
     let teddies = JSON.parse(response); //tranformation des données JSON en JS
     //création de la boucle pour passer en revue chaque objet
-    console.log(teddies);
     for (let i = 0; i < teddies.length; i++) {
       //récupération de la div qui va réceptionné les données
       let teddiesList = document.createElement("div");

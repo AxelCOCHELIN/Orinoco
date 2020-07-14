@@ -87,7 +87,7 @@ class Client {
 }
 
 //variables générales du client
-let orderButton = document.querySelector(".order-submit");
+let orderButton = document.querySelector("#button button");
 let firstName = document.querySelector("#firstName");
 let lastName = document.querySelector("#lastName");
 let eMail = document.querySelector("#inputEmail");
@@ -101,6 +101,9 @@ let productsIdList = [];
 for (let i = 0; i < productsInCart.length; i++) {
   productsIdList.push(productsInCart[i].iD);
 }
+localStorage.setItem("products", JSON.stringify(productsIdList));
+productsIdList = localStorage.getItem("products");
+productsIdList = JSON.parse(productsIdList);
 
 //au click sur submit
 orderButton.addEventListener("click", function (event) {
@@ -128,7 +131,7 @@ orderButton.addEventListener("click", function (event) {
         city: newClient.city,
         email: newClient.eMail,
       },
-      products: [productsIdList],
+      products: productsIdList,
     }),
   })
     .then((res) => {

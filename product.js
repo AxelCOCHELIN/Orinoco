@@ -161,9 +161,3 @@ cartButton.addEventListener("click", function () {
 
 //appelle de la fonction
 onLoadCartNumber();
-
-/**
- *
- * j'affiche dans la page cart.html les objets ajoutés
- *
- */

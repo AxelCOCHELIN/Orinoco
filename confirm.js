@@ -10,8 +10,7 @@ let orderId = orderInfo.orderId;
 totalPriceDisplay.textContent = totalPrice; //affichage du prix total
 orderIdDisplay.textContent = orderId; //affichage de l'id de commande
 
-//reset le panier au click sur les liens
-let links = document.querySelectorAll("a");
-links.addEventListener("click", function () {
+//reset le panier au départ de la page
+window.addEventListener("unload", function () {
   localStorage.clear();
 });

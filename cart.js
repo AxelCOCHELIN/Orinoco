@@ -87,7 +87,7 @@ class Client {
 }
 
 //variables générales du client
-let orderButton = document.querySelector("#button button");
+let orderButton = document.querySelector(".order-submit");
 let firstName = document.querySelector("#firstName");
 let lastName = document.querySelector("#lastName");
 let eMail = document.querySelector("#inputEmail");
@@ -136,9 +136,12 @@ orderButton.addEventListener("click", function (event) {
   })
     .then((res) => {
       if (res.ok) {
+        alert(
+          "Vos informations ont bien été enregistrées. Vous pouvez à présent valider votre commande"
+        );
         return res.json();
       } else {
-        alert("Vous devez renseigner les champs");
+        alert("Vous devez renseigner les champs.");
       }
     })
     .then((data) => {
@@ -146,7 +149,6 @@ orderButton.addEventListener("click", function (event) {
       localStorage.setItem("orderInfos", JSON.stringify(data));
     })
     .catch((error) => console.log("erreur de type : ", error));
-  orderButton.removeEventListener;
 });
 
 /**

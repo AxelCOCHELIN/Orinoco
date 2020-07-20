@@ -27,6 +27,6 @@ Un adorable ourson nommé ${BuyedBear.name} dont la couleur est ${
 }
 
 //reset le panier au départ de la page
-/*window.addEventListener("unload", function () {
+window.addEventListener("unload", function () {
   localStorage.clear();
-});*/
+});

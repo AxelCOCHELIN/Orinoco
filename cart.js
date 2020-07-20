@@ -1,3 +1,4 @@
+//fonction affichant le nombre de produits dans le panier au chargement
 function onLoadCartNumber() {
   let productInCart = localStorage.getItem("ProductsInCart");
   if (productInCart) {
@@ -147,7 +148,6 @@ orderButton.addEventListener("click", function (event) {
       }
     })
     .then((data) => {
-      console.log(data);
       localStorage.setItem("orderInfos", JSON.stringify(data));
     })
     .catch((error) => console.log("erreur de type : ", error));

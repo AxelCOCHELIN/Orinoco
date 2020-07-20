@@ -17,6 +17,7 @@ let get = function (url) {
 };
 
 /**********CREATION DE LA PAGE LISTE EN JS *********/
+
 //appelle de la fonction
 get("http://localhost:3000/api/teddies/")
   .then(function (response) {

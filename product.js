@@ -4,10 +4,6 @@ let displayProduct = document.querySelector(".display-product"); // création se
 let productPrice = localStorage.getItem("price"); //enregistre le prix dans une variable
 productPrice = parseInt(productPrice); //transforme le prix en un nombre plutôt qu'un string
 
-/*PROCHAINE ETAPE : créer un tableau avec les données couleurs, 
-l'implémenter au html et 
-créer des bouton ou lien permettant la personnalisation.*/
-
 let splitColors = localStorage.getItem("colors"); //récupère les couleurs des produits
 let color = splitColors.split(","); //divise les couleurs grâce aux virgules
 let colors = new Array(); //création d'un tableau

@@ -152,8 +152,3 @@ orderButton.addEventListener("click", function (event) {
     })
     .catch((error) => console.log("erreur de type : ", error));
 });
-
-/**
- * récupérer l'id de commande
- * créer html de confirm
- */
